@@ -1,2 +1,2 @@
 # madokaScript
-my custom scripting language 
+my custom scripting language because why not
