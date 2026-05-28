@@ -13,10 +13,10 @@ std::vector<Token> Lexer::tokenize()
 
         char c = src[pos];
 
-        if(c == '"')        tokens.push_back(read_string());
-        else if(isdigit(c)) tokens.push_back(read_number());
-        else if(isalpha(c)) tokens.push_back(read_word());
-        else                tokens.push_back(read_symbol());
+        if(c == '"')                    tokens.push_back(read_string());
+        else if(isdigit(c))             tokens.push_back(read_number());
+        else if(isalpha(c) || c == '_') tokens.push_back(read_word());
+        else                            tokens.push_back(read_symbol());
     }
     tokens.push_back({TokenType::EOF_, ""});
     return tokens;
@@ -68,11 +68,7 @@ Token Lexer::read_word()
     if(word == "bool") return {TokenType::BOOL, word};
     if(word == "true") return {TokenType::BOOL_LIT, word};
     if(word == "false") return {TokenType::BOOL_LIT, word};
-    if(word == "ADD") return {TokenType::ADD, word};
-    if(word == "SUB") return {TokenType::SUB, word};
-    if(word == "MULT") return {TokenType::MULT, word};
-    if(word == "DIV") return {TokenType::DIV, word};
-    if(word == "SAY") return {TokenType::PRINT, word};
+    if(word == "SAY")   return {TokenType::SAY, word};
 
     return {TokenType::IDENT, word};
 }
@@ -81,6 +77,10 @@ Token Lexer::read_symbol()
 {
     char c = src[pos++];
     switch(c) {
+        case '+': return {TokenType::PLUS, "+"};
+        case '-': return {TokenType::MINUS, "-"};
+        case '*': return {TokenType::STAR, "*"};
+        case '/': return {TokenType::SLASH, "/"};
         case '=': return {TokenType::EQUALS, "="};
         case '(': return {TokenType::LPAREN, "("};
         case ')': return {TokenType::RPAREN, ")"};

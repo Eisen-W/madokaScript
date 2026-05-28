@@ -10,9 +10,6 @@ enum class TokenType {
     // DATATYPES
     INT, FLOAT, STRING, BOOL,
 
-    // MATH OPS
-    ADD, SUB, MULT, DIV,
-
     //LITERALS
     NUMBER_INT, 
     NUMBER_FLOAT,
@@ -22,6 +19,9 @@ enum class TokenType {
     //IDENTIFIERS
     IDENT,
 
+    // MATH OPS
+    PLUS, MINUS, STAR, SLASH,
+
     //SYMBOLS
     EQUALS,
     LPAREN,
@@ -30,7 +30,7 @@ enum class TokenType {
     SEMICOLON,
 
     //BUILT INS
-    PRINT,
+    SAY,
 
     EOF_
 };

@@ -2,15 +2,12 @@
 
 #include <string>
 #include <vector>
-#include<cstdio>
+#include <cstdio>
 #include "lexer.hpp"
 
 enum class NodeType {
     DECLARE,
-    ADD,
-    SUBTRACT,
-    MULTIPLY,
-    DIVIDE,
+    BINARY_OP,
     NUMER_INT,
     NUMBER_FLOAT,
     STRING_LIT,
@@ -25,6 +22,7 @@ struct ASTNode {
     double num_val;
     std::string dec1_type;
     std::string dec1_name;
+    std::string math_ops;
 
     std::vector<ASTNode*> children;
 };
@@ -57,7 +55,10 @@ class Parser {
     ASTNode* parse_statement();
     ASTNode* parse_declaration();
     ASTNode* parse_expr();
-    ASTNode* parse_op(NodeType op_type);
+    ASTNode* parse_additive();
+    ASTNode* parse_multiplicative();
+    ASTNode* parse_primary();
+    //ASTNode* parse_op(NodeType op_type);
     ASTNode* parse_say();
 
 };

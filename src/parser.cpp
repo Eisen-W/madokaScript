@@ -23,7 +23,7 @@ ASTNode* Parser::parse_statement()
         return parse_declaration();
     }
 
-    if(check(TokenType::PRINT))
+    if(check(TokenType::SAY))
     {
         return parse_say();
     }
@@ -37,13 +37,11 @@ ASTNode* Parser::parse_declaration()
 {
     Token type_tok = advance();
 
-    Token name_tok = expect(TokenType::IDENT, "expected variable name");
+    Token name_tok =    expect(TokenType::IDENT, "expected variable name");
+                        expect(TokenType::EQUALS, "expected '='");
 
-    expect(TokenType::EQUALS, "expected '='");
-
-    ASTNode* value = parse_expr();
-
-    expect(TokenType::SEMICOLON, "expected ';'");
+    ASTNode* value =    parse_expr();
+                        expect(TokenType::SEMICOLON, "expected ';'");
 
     ASTNode* node = new ASTNode{};
     node->type = NodeType::DECLARE;
@@ -54,14 +52,51 @@ ASTNode* Parser::parse_declaration()
     return node;
 }
 
+//bottom to top precedence
+//parse expr -> parse additive -> parse multilicative -> parse primary
 ASTNode* Parser::parse_expr()
 {
-    //math ops
-    if(check(TokenType::ADD)) return parse_op(NodeType::ADD);
-    if(check(TokenType::SUB)) return parse_op(NodeType::SUBTRACT);
-    if(check(TokenType::MULT)) return parse_op(NodeType::MULTIPLY);
-    if(check(TokenType::DIV)) return parse_op(NodeType::DIVIDE);
+    return parse_additive();
+}
 
+ASTNode* Parser::parse_additive()
+{
+    ASTNode* left = parse_multiplicative();
+
+    while(check(TokenType::PLUS) || check(TokenType::MINUS))
+    {
+        std::string op = advance().value;
+        ASTNode* right = parse_multiplicative();
+
+        ASTNode* node = new ASTNode();
+        node->type      = NodeType::BINARY_OP;
+        node->math_ops  = op;
+        node->children  = {left, right};
+        left = node;
+    }
+    return left;
+}
+
+ASTNode* Parser::parse_multiplicative()
+{
+    ASTNode* left = parse_primary();
+
+    while (check(TokenType::STAR) || check(TokenType::SLASH))
+    {
+        std::string op = advance().value;
+        ASTNode* right = parse_primary();
+
+        ASTNode* node = new ASTNode{};
+        node->type      = NodeType::BINARY_OP;
+        node->math_ops  = op;
+        node->children  = {left, right};
+        left = node;
+    }
+    return left;
+}
+
+ASTNode* Parser::parse_primary()
+{
     //literals
     if(check(TokenType::NUMBER_INT))
     {
@@ -106,27 +141,18 @@ ASTNode* Parser::parse_expr()
         return n;
     }
 
-    printf("parse error: unexpected token '%s'\n", tokens[pos].value.c_str());
-    exit(1);
-}
-
-ASTNode* Parser::parse_op(NodeType op_type)
-{
-    advance();
-
-    expect(TokenType::LPAREN, "expected '(' after op");
-
-    ASTNode* node = new ASTNode{};
-    node->type = op_type;
-
-    while(!check(TokenType::RPAREN) && !check(TokenType::EOF_))
+    //for grouped expression
+    if(check(TokenType::LPAREN))
     {
-        node->children.push_back(parse_expr());
-        if(check(TokenType::COMMA)) advance();
+        advance();
+        ASTNode* expr = parse_expr();
+        expect(TokenType::RPAREN,"expected ')'");
+        return expr;
     }
 
-    expect(TokenType::RPAREN, "expected ')'");
-    return node;
+    printf("parse error: unexpected token '%s'\n", tokens[pos].value.c_str());
+    exit(1);
+
 }
 
 ASTNode* Parser::parse_say()
