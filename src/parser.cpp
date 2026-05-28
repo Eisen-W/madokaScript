@@ -15,6 +15,7 @@ std::vector<ASTNode*> Parser::parse()
 //private
 ASTNode* Parser::parse_statement()
 {
+    //printf("debug: current token type=%d value='%s'\n", (int)peek().type, peek().value.c_str());
     if (check(TokenType::INT) ||
         check(TokenType::FLOAT) ||
         check(TokenType::STRING) ||
@@ -39,14 +40,15 @@ ASTNode* Parser::parse_declaration()
 
     Token name_tok =    expect(TokenType::IDENT, "expected variable name");
                         expect(TokenType::EQUALS, "expected '='");
+    //printf("debug decl: next token type=%d value='%s'\n", (int)peek().type, peek().value.c_str());
 
     ASTNode* value =    parse_expr();
                         expect(TokenType::SEMICOLON, "expected ';'");
 
     ASTNode* node = new ASTNode{};
     node->type = NodeType::DECLARE;
-    node->dec1_type = type_tok.value;
-    node->dec1_name = name_tok.value;
+    node->decl_type = type_tok.value;
+    node->decl_name = name_tok.value;
     node->children = {value};
 
     return node;
@@ -102,7 +104,7 @@ ASTNode* Parser::parse_primary()
     {
         Token t = advance();
         ASTNode* n = new ASTNode{};
-        n->type = NodeType::NUMER_INT;
+        n->type = NodeType::NUMBER_INT;
         n->num_val = std::stod(t.value);
         return n;
     }

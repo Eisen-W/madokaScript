@@ -8,7 +8,7 @@
 enum class NodeType {
     DECLARE,
     BINARY_OP,
-    NUMER_INT,
+    NUMBER_INT,
     NUMBER_FLOAT,
     STRING_LIT,
     BOOL_LIT,
@@ -20,8 +20,8 @@ struct ASTNode {
     NodeType type;
     std::string str_val;
     double num_val;
-    std::string dec1_type;
-    std::string dec1_name;
+    std::string decl_type;
+    std::string decl_name;
     std::string math_ops;
 
     std::vector<ASTNode*> children;

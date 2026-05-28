@@ -1,5 +1,6 @@
 #include "include/lexer.hpp"
 #include "include/parser.hpp"
+#include "include/interpreter.hpp"
 #include <cstdio>
 #include <string>
 
@@ -35,12 +36,17 @@ int main(int argc, char** argv)
     Lexer lexer(src);
     auto tokens = lexer.tokenize();
 
+    
     for(auto& t : tokens)
     {
         printf("type: %d value: %s\n", (int)t.type, t.value.c_str());
     }
+    
     Parser parser(tokens);
     auto ast = parser.parse();
+
+    Interpreter interp;
+    interp.run(ast);
 
     free(src);
     return 0;

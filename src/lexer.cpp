@@ -43,7 +43,7 @@ Token Lexer::read_number()
     }
 
     std::string val(src + start, pos - start);
-    return {is_float ? TokenType::NUMBER_FLOAT : TokenType::INT, val};
+    return {is_float ? TokenType::NUMBER_FLOAT : TokenType::NUMBER_INT, val};
 }
 
 Token Lexer::read_string()
