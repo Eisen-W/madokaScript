@@ -1,4 +1,4 @@
-#include "../include/interpreter.hpp"
+#include "interpreter.hpp"
 #include <vector>
 
 void Interpreter::run(std::vector<ASTNode*>& ast)
