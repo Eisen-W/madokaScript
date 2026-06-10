@@ -21,6 +21,6 @@ target_include_directories(${name} PRIVATE include/)
 # endif()
 
 #Windows
-# if(WIN32)
-#     target_link_libraries(${name} PRIVATE opengl32 gdi32 winmm raylib)
-# endif()
+if(WIN32)
+    target_link_options(${name} PRIVATE -static-libgcc -static-libstdc++)
+endif()
