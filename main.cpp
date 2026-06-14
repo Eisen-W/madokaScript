@@ -35,6 +35,7 @@ int main(int argc, char** argv)
 
     Lexer lexer(src);
     auto tokens = lexer.tokenize();
+    size_t pos = 0;
 
     /*
     for(auto& t : tokens)
@@ -43,7 +44,7 @@ int main(int argc, char** argv)
     }
     */
     
-    Parser parser(tokens);
+    Parser parser(tokens, pos);
     auto ast = parser.parse();
 
     Interpreter interp;
