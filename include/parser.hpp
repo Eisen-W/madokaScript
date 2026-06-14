@@ -51,10 +51,11 @@ class Parser {
 
     std::vector<ASTNode*> parse();
 
-    private:
     ASTNode* parse_statement();
-    ASTNode* parse_declaration();
     ASTNode* parse_expr();
+
+    private:
+    ASTNode* parse_declaration();
     ASTNode* parse_additive();
     ASTNode* parse_multiplicative();
     ASTNode* parse_primary();
