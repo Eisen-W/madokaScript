@@ -35,6 +35,8 @@ class Interpreter{
 
     public:
     void run(std::vector<ASTNode*>& ast);
+    void exec_node(ASTNode* node) {exec(node);}             //runs a single statement
+    Value eval_node(ASTNode* node) { return eval(node); }   //evaluates a single expression
 
     private:
     void exec(ASTNode* node);
